@@ -1,12 +1,11 @@
 
 import './App.css'
+import { AppRoutes } from './Route/route'
 
 function App() {
   
   return (
-    <>
-    Kanban online here 
-    </>
+    <AppRoutes />
   )
 }
  
