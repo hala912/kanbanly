@@ -1,0 +1,13 @@
+$kind: http-request
+name: http://localhost:3000/boards
+description: ""
+url: http://localhost:3000/boards
+method: POST
+body:
+  type: json
+  content: "{\r\n    \"name\":\"newboard\"\r\n}"
+auth:
+  type: bearer
+  credentials:
+    token: "{{supabase_service_role_api_key_0kk2}}"
+order: 1789068881529
