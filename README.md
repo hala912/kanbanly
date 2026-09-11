@@ -65,6 +65,8 @@ npm run dev
 
 cd $env:USERPROFILE
 pg_ctl -D "$env:USERPROFILE\scoop\apps\postgresql\current\data" -l logfile start
+
+Run this from your home directory, not C:\Windows\System32 — running pg_ctl from System32 fails with "Access is denied."
 psql -U postgres
 ```
 
