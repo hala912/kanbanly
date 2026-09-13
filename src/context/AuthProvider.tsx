@@ -3,7 +3,7 @@ import { AuthContext, type User } from "./AuthContext";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(() =>
-    localStorage.getItem("token")
+    localStorage.getItem("token"),
   );
 
   const [user, setUser] = useState<User | null>(() => {
@@ -17,16 +17,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   async function login(email: string, password: string) {
-    const res = await fetch("http://localhost:3000/auth/login", {
+    const res = await fetch("http://localhost:3000/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
 
     if (!res.ok) {
+      const body = await res.text();
+      console.error("Login failed:", res.status, body);
       throw new Error("Login failed");
     }
-
     const data = await res.json();
     localStorage.setItem("token", data.token);
     setToken(data.token);

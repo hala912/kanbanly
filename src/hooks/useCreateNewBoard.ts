@@ -16,8 +16,9 @@ export function useCreateNewBoard() {
                 body: JSON.stringify({ name: boardName })
             }); 
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["boards"] });
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ["boards",data.id] });
+            
         }
     });
 
