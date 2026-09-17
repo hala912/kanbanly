@@ -1,4 +1,10 @@
+import { useGetBoards } from "../../hooks/useGetBoards";
+
 const BoardCard = () => {
+
+  const Boards = useGetBoards();
+  
+  
   const members = [
     {
       name: "John Doe",
@@ -19,9 +25,10 @@ const BoardCard = () => {
   ];
 
   return (
+    Boards.data?.map((board: { id: number; name: string; description: string }) => (
     <div className="bg-[#1C1B1B] rounded p-4 shadow-md border border-transparent hover:border-[#787776] shadow-lg transition-shadow duration-300">
       <div className="flex flex-col items-start justify-between mb-2">
-        <h2 className="text-lg font-semibold text-neutral-100">Board Title</h2>
+        <h2 className="text-lg font-semibold text-neutral-100">{board.name}</h2>
         <span className="text-sm text-neutral-400">
           whatever from the board
         </span>
@@ -51,6 +58,7 @@ const BoardCard = () => {
     
       </div>
     </div>
+    ))
   );
 };
 

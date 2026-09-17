@@ -1,0 +1,12 @@
+$kind: http-request
+url: http://localhost:3000/boards/24/columns/:colmunId
+method: DELETE
+pathVariables:
+  - key: colmunId
+    value: "2"
+    description: ""
+auth:
+  type: bearer
+  credentials:
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJ5b3VAZXhhbXBsZS5jb20iLCJpYXQiOjE3ODk0ODY3MTgsImV4cCI6MTc4OTQ5MDMxOH0.37bFGVqaywoNCupgyyzu5cIn5c8NP1u6ujrm1on8NtY
+order: 397641234293316

@@ -1,5 +1,4 @@
 $kind: http-request
-name: http://localhost:3000/login
 description: ""
 url: http://localhost:3000/login
 method: POST

@@ -15,7 +15,7 @@ const BoardsPages = () => {
   return (
     <div
       className="min-h-screen bg-[#0A0A0A] px-8 py-10"
-      style={{
+      style={{  
         backgroundImage:
           "radial-gradient(circle, #1C1B1B 1px, transparent 1px)",
         backgroundSize: "24px 24px",
