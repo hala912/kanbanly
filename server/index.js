@@ -26,6 +26,8 @@ app.get("/db-test", async (req, res) => {
 app.use("/", require("./routes/auth"));
 // Add the boards routes.
 app.use("/", require("./routes/boards"));
+// Add the columns routes.
+app.use("/", require("./routes/colums"));
 // Start the server on the configured port.
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

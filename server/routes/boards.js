@@ -3,6 +3,19 @@ const router = express.Router();
 const pool = require("../db");
 const verifyToken = require("../middleware/auth");
 
+router.get("/boards", verifyToken, async (req, res) => {
+  const userId = req.user.id;
+  try {
+    const result = await pool.query(
+      "SELECT * FROM boards WHERE owner_id = $1",
+      [userId]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error fetching boards");
+  }
+});
 router.post("/boards", verifyToken, async (req, res) => {
   const { name } = req.body;
   const userId = req.user.id; // Assuming you have user authentication middleware that sets req.user
