@@ -1,0 +1,11 @@
+$kind: http-request
+url: http://localhost:3000/boards/24/columns
+method: POST
+body:
+  type: json
+  content: "{\r\n    \"title\": \"testtest\"\r\n}"
+auth:
+  type: bearer
+  credentials:
+    token: "{{json_web_token_0ikd}}"
+order: 1789486582603

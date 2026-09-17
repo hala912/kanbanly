@@ -1,13 +1,16 @@
 $kind: http-request
-name: http://localhost:3000/boards
 description: ""
 url: http://localhost:3000/boards
 method: POST
 body:
   type: json
-  content: "{\r\n    \"name\":\"newboard\"\r\n}"
+  content: "{\r
+
+    \    \"name\":\"testcolmuns\"\r
+
+    }"
 auth:
   type: bearer
   credentials:
-    token: "{{supabase_service_role_api_key_0kk2}}"
+    token: "{{json_web_token_0ikd}}"
 order: 1789068881529

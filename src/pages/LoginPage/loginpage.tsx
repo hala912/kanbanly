@@ -12,8 +12,8 @@ export function LoginTest() {
   const handleLogin = () => {
     user.login(email, password).catch((err) => {
       setError(err.message);
-      navigate("/");
     }); 
+     navigate("/");
   };
 
   return (
