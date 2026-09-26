@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "../../Apis/api";
 
-export function useAddColumns(boardId: number) {
+export function useAddColumns(boardId: number | undefined) {
 
     const usequeryClient = useQueryClient();
     return useMutation(

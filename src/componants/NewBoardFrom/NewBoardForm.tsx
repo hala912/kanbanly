@@ -1,10 +1,12 @@
+import { useState } from "react";
 import { useCreateNewBoard } from "../../hooks/useCreateNewBoard";
 
 export const CreateNewBoard = ({ onBoardCreated }: { onBoardCreated: (boardId: number) => void }) => {
   const mutation = useCreateNewBoard();
 
+  const [boardName, setBoardName] = useState("");
   const handleCreateNewBoard = () => {
-    mutation.mutate("", {
+    mutation.mutate(boardName, {
       onSuccess: (data) => {
         onBoardCreated(data.id);
       }
@@ -35,6 +37,8 @@ export const CreateNewBoard = ({ onBoardCreated }: { onBoardCreated: (boardId: n
             </label>
             <input
               type="text"
+              value={boardName}
+              onChange={(e) => setBoardName(e.target.value)}
               placeholder="Q1 Product Roadmap & Sprint 50"
               className="p-2 border border-neutral-600 rounded text-neutral-100 bg-[#0A0A0A] placeholder-neutral-500"
             />

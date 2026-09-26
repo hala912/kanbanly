@@ -2,7 +2,7 @@ import { LayoutDashboard, Settings, User } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 const Sidebar = () => {
   const icons = [
-    { name: "Boards", icon: LayoutDashboard, path: "/" },
+    { name: "Boards", icon: LayoutDashboard, path: "/boards" },
     { name: "Templates", icon: Settings, path: "/templates" },
     { name: "Profile", icon: User, path: "/team" },
   ];

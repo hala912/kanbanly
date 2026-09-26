@@ -1,0 +1,63 @@
+import { useParams } from "react-router-dom";
+import { useGetColumns } from "../../hooks/useColumns/useGetColmuns"
+import { useAddColumns } from "../../hooks/useColumns/useAddColmuns";
+import { useGetBoards } from "../../hooks/useGetBoards";
+
+export const ColmunsPage = () => {
+    const { boardId } = useParams<{ boardId: string }>()
+    const boardIdNumber = boardId ? Number(boardId) : undefined;
+    const colmuns = useGetColumns(boardIdNumber);
+    const mutatedColumns = useAddColumns(boardIdNumber);
+
+    //to add the board name to the page, we can use the useGetBoard hook to get the board name by id and display it in the page
+    const boards = useGetBoards();
+    const currentBoard = boards.data?.find((board) => board.id === boardIdNumber);
+
+
+    const addColumn = () => {
+        mutatedColumns.mutate("New Column Title");
+    }
+
+    return (
+        <div
+            className="min-h-screen bg-[#0A0A0A] px-8 py-10"
+            style={{
+                backgroundImage: "radial-gradient(circle, #1C1B1B 1px, transparent 1px)",
+                backgroundSize: "24px 24px",
+            }}
+        >
+    
+             <h2 className="text-2xl font-bold text-neutral-100 mb-4">{currentBoard?.name}</h2>
+
+            <div className="flex gap-4 items-start overflow-x-auto">
+                {colmuns.data?.map((column) => (
+                    <div
+                        key={column.id}
+                        className="bg-[#1C1B1B] rounded-lg border border-neutral-800 w-72 shrink-0 p-3"
+                    >
+                        <h3 className="text-sm font-semibold text-neutral-200 mb-3 px-1">
+                            {column.title}
+                        </h3>
+
+                        <div className="flex flex-col gap-2">
+                            {/* card list will map here later */}
+                        </div>
+
+                        <button
+                            className="w-full mt-2 text-sm text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800 rounded px-2 py-1.5 text-left transition-colors"
+                        >
+                            + Add a card
+                        </button>
+                    </div>
+                ))}
+
+                <button
+                    onClick={addColumn}
+                    className="w-72 shrink-0 h-12 rounded-lg border border-dashed border-neutral-700 text-neutral-500 hover:text-neutral-300 hover:border-neutral-500 text-sm transition-colors"
+                >
+                    + Add Column
+                </button>
+            </div>
+        </div>
+    )
+}

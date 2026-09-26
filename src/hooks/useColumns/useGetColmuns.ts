@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiFetch } from "../../Apis/api";
 
-export function useGetColumns(boardId: number) {
+export function useGetColumns(boardId?: number) {
     return useQuery({
         queryKey: ["columns", boardId], 
         queryFn: async () => {
@@ -10,7 +10,7 @@ export function useGetColumns(boardId: number) {
         });
         return response;
         },
-       enabled: !!boardId
+       enabled: !!boardId,
     })
 
 

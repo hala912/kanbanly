@@ -1,17 +1,6 @@
-import BoardCard from "../../componants/BoardPage/BoardCard";
+import BoardCard from "../../componants/BoardsList/BoardsCardList";
 
 const BoardsPages = () => {
-  /* const boards = useBoards()
-    const [newBoardName, setNewBoardName] = useState("")
-    
-    const { mutate } = useCreateNewBoard()
-    const handleCreateBoard = () => {
-        mutate(newBoardName)
-        setNewBoardName("")
-      console.log("Creating board with name:", newBoardName)
-
-    }   */
-
   return (
     <div
       className="min-h-screen bg-[#0A0A0A] px-8 py-10"
