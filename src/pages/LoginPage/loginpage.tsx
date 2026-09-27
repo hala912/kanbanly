@@ -13,7 +13,7 @@ export function LoginTest() {
     user.login(email, password).catch((err) => {
       setError(err.message);
     }); 
-     navigate("/");
+     navigate("/boards");
   };
 
   return (
