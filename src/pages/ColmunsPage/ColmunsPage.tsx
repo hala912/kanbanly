@@ -3,6 +3,8 @@ import { useGetColumns } from "../../hooks/useColumns/useGetColmuns";
 import { useAddColumns } from "../../hooks/useColumns/useAddColmuns";
 import { useGetBoards } from "../../hooks/useGetBoards";
 import { useState } from "react";
+import { CardsList } from "../../componants/CardsList/CardsList";
+
 
 export const ColmunsPage = () => {
   const { boardId } = useParams<{ boardId: string }>();
@@ -15,6 +17,8 @@ export const ColmunsPage = () => {
   const currentBoard = boards.data?.find((board) => board.id === boardIdNumber);
 
   const [isAddingColumn, setIsAddingColumn] = useState(false);
+
+  // State to hold the new column title
   const [columnTitle, setColumnTitle] = useState("");
   const addColumn = () => {
     mutatedColumns.mutate(columnTitle);
@@ -44,13 +48,11 @@ export const ColmunsPage = () => {
               {column.title}
             </h3>
 
+              {/** Add the CardsList component here to display the cards for each column */}
             <div className="flex flex-col gap-2">
-              {/* card list will map here later */}
+             <CardsList boardId={boardIdNumber} columnId={column.id} />
             </div>
 
-            <button className="w-full mt-2 text-sm text-neutral-500 hover:text-neutral-300 hover:bg-neutral-800 rounded px-2 py-1.5 text-left transition-colors">
-              + Add a card
-            </button>
           </div>
         ))}
         {!isAddingColumn && (
