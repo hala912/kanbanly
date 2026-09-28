@@ -28,6 +28,8 @@ app.use("/", require("./routes/auth"));
 app.use("/", require("./routes/boards"));
 // Add the columns routes.
 app.use("/", require("./routes/colums"));
+// Add the cards routes.
+app.use("/", require("./routes/cards"));
 // Start the server on the configured port.
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

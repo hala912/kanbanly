@@ -3,7 +3,7 @@ const router = express.Router();
 const pool = require("../db");
 const verifyToken = require("../middleware/auth");
 
-router.get("/columns/:columnId/cards", verifyToken, async (req, res) => {
+router.get("/boards/:boardId/columns/:columnId/cards", verifyToken, async (req, res) => {
   const { columnId } = req.params;
   const userId = req.user.id;
 
@@ -41,7 +41,7 @@ router.get("/columns/:columnId/cards", verifyToken, async (req, res) => {
   }
 });
 
-router.post("/columns/:columnId/cards", verifyToken, async (req, res) => {
+router.post("/boards/:boardId/columns/:columnId/cards", verifyToken, async (req, res) => {
   const { columnId } = req.params;
   const { title, description } = req.body;
   const userId = req.user.id;
@@ -89,7 +89,7 @@ router.post("/columns/:columnId/cards", verifyToken, async (req, res) => {
   }
 });
 
-router.delete("/columns/:columnId/cards/:cardId", verifyToken, async (req, res) => {
+router.delete("/boards/:boardId/columns/:columnId/cards/:cardId", verifyToken, async (req, res) => {
   const { columnId, cardId } = req.params;
   const userId = req.user.id;
 
@@ -129,7 +129,7 @@ router.delete("/columns/:columnId/cards/:cardId", verifyToken, async (req, res) 
   }
 })
 
-router.put("/columns/:columnId/cards/:cardId", verifyToken, async (req, res) => {
+router.put("/boards/:boardId/columns/:columnId/cards/:cardId", verifyToken, async (req, res) => {
   const { columnId, cardId } = req.params;
   const { title, description } = req.body;
   const userId = req.user.id;
@@ -169,3 +169,6 @@ router.put("/columns/:columnId/cards/:cardId", verifyToken, async (req, res) => 
     res.status(500).json({ error: "Internal server error" });
   }
 })
+
+
+module.exports = router;
