@@ -170,5 +170,46 @@ router.put("/boards/:boardId/columns/:columnId/cards/:cardId", verifyToken, asyn
   }
 })
 
+router.patch("/boards/:boardId/columns/:columnId/cards", verifyToken, async (req, res) => {
+  const { columnId } = req.params;
+  const { cardids } = req.body;
+  const userId = req.user.id;
+
+  try {
+    const boardResult = await pool.query(
+      "SELECT board_id FROM columns WHERE id = $1",
+      [columnId],
+    );
+    if (boardResult.rows.length === 0) {
+      return res.status(404).json({ error: "Column not found" });
+    }
+    const boardId = boardResult.rows[0].board_id;
+
+    const result = await pool.query(
+      "SELECT * FROM board_members WHERE board_id = $1 AND user_id = $2",
+      [boardId, userId],
+    );
+    if (result.rows.length === 0) {
+      return res
+        .status(403)
+        .json({ error: "You are not a member of this board" });
+    }
+
+    for (let i = 0; i < cardids.length; i++) {
+      const cardId = cardids[i];
+      const newPosition = i;
+      await pool.query(
+        "UPDATE cards SET position = $1 WHERE id = $2 AND column_id = $3",
+        [newPosition, cardId, columnId],
+      );
+    }
+
+    res.json({ message: "Card positions updated successfully" });
+  } catch (error) {
+    console.error("Error updating card position:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 module.exports = router;
