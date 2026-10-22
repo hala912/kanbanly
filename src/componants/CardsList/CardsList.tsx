@@ -55,7 +55,7 @@ export const CardsList = ({
     <DndContext onDragEnd={handleDragEnd}>
       <SortableContext items={cards.data?.map((card) => card.id) || []}>
         <div className="flex flex-col gap-2">
-          <div className="flex flex-col gap-2 overflow-y-auto max-h-[400px]">
+          <div className="flex flex-col gap-2 max-h-[400px]">
             {cards.data?.map((card) => (
               <DraggableCard key={card.id} card={card} />
             ))}

@@ -4,6 +4,31 @@ const cors = require("cors");
 require("dotenv").config();
 const pool = require("./db");
 const app = express();
+const http = require("http");
+const { Server } = require("socket.io");
+
+const server = http.createServer(app); 
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+  },
+});
+io.on("connection", (socket) => {
+  console.log("a user connected");
+  // Listen for the "disconnect" event and log when a user disconnects.
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+  // Listen for the "joinRoom" event and join the specified room. 
+  socket.on("joinRoom", (boardId) => {
+    socket.join(`board-${boardId}`);
+    console.log(`${socket.id} joined board-${boardId}`);
+  }) 
+
+})
+
+app.set("io", io);
+
 const PORT = process.env.PORT || 3000;
 // Allow requests from the frontend and read JSON request bodies.
 app.use(cors());
@@ -31,6 +56,8 @@ app.use("/", require("./routes/colums"));
 // Add the cards routes.
 app.use("/", require("./routes/cards"));
 // Start the server on the configured port.
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+module.exports = { io };

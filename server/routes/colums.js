@@ -129,5 +129,20 @@ router.patch("/boards/:boardId/columns/:columnId", verifyToken, async (req, res)
     return res.status(500).json({ error: "Internal server error" });
   }
 })
+router.patch("/boards/:boardId/columns/:columnId/reorder", verifyToken, async (req, res) => {
+  const { boardId, columnId } = req.params;
+  const { newPosition } = req.body;
+  const userId = req.user.id;
 
+  try {
+    const result = await pool.query(
+      "SELECT * FROM board_members WHERE board_id = $1 AND user_id = $2",
+      [boardId, userId],
+    );
+    
+  } catch (error) {
+    console.error("Error checking editing permissions:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+})
 module.exports = router;
