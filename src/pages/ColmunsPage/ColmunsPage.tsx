@@ -2,8 +2,12 @@ import { useParams } from "react-router-dom";
 import { useGetColumns } from "../../hooks/useColumns/useGetColmuns";
 import { useAddColumns } from "../../hooks/useColumns/useAddColmuns";
 import { useGetBoards } from "../../hooks/useGetBoards";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CardsList } from "../../componants/CardsList/CardsList";
+import { DndContext } from "@dnd-kit/core";
+import { DroppableColumn } from "../../componants/DroppableColmun/DroppableColumn";
+import { io } from "socket.io-client";
+import { useQueryClient } from "@tanstack/react-query";
 
 
 export const ColmunsPage = () => {
@@ -11,6 +15,25 @@ export const ColmunsPage = () => {
   const boardIdNumber = boardId ? Number(boardId) : undefined;
   const colmuns = useGetColumns(boardIdNumber);
   const mutatedColumns = useAddColumns(boardIdNumber);
+
+  const queryClient = useQueryClient()
+  useEffect(() => {
+    const socket = io("http://localhost:3000");
+    socket.on("cardAdded", () => {
+      console.log("Card added event received");
+      queryClient.invalidateQueries({queryKey :["cards", boardId]});
+    });
+    socket.on("connect", () => {
+      console.log("Connected to socket server");
+    });
+
+    socket.emit("joinRoom", boardId);
+    return () => {
+      socket.disconnect();
+    }
+    
+  }, [boardId]);
+
 
   //to add the board name to the page, we can use the useGetBoard hook to get the board name by id and display it in the page
   const boards = useGetBoards();
@@ -26,6 +49,7 @@ export const ColmunsPage = () => {
   };
 
   return (
+    <DndContext>
     <div
       className="min-h-screen bg-[#0A0A0A] px-8 py-10"
       style={{
@@ -39,21 +63,13 @@ export const ColmunsPage = () => {
       </h2>
 
       <div className="flex gap-4 items-start overflow-x-auto">
-        {colmuns.data?.map((column) => (
-          <div
-            key={column.id}
-            className="bg-[#1C1B1B] rounded-lg border border-neutral-800 w-72 shrink-0 p-3"
-          >
-            <h3 className="text-sm font-semibold text-neutral-200 mb-3 px-1">
-              {column.title}
-            </h3>
-
-              {/** Add the CardsList component here to display the cards for each column */}
-            <div className="flex flex-col gap-2">
-             <CardsList boardId={boardIdNumber} columnId={column.id} />
-            </div>
-
-          </div>
+        {colmuns.data?.map((column) => ( 
+          <DroppableColumn key={column.id} column={column}>
+             <div className="flex flex-col gap-2">
+               {/** Add the CardsList component here to display the cards for each column */}
+               <CardsList boardId={boardIdNumber} columnId={column.id} />
+             </div>
+          </DroppableColumn>
         ))}
         {!isAddingColumn && (
           <button
@@ -96,5 +112,6 @@ export const ColmunsPage = () => {
         )}
       </div>
     </div>
+    </DndContext>
   );
 };

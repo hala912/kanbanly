@@ -3,6 +3,7 @@ const router = express.Router();
 const pool = require("../db");
 const verifyToken = require("../middleware/auth");
 
+
 router.get("/boards/:boardId/columns/:columnId/cards", verifyToken, async (req, res) => {
   const { columnId } = req.params;
   const userId = req.user.id;
@@ -81,7 +82,8 @@ router.post("/boards/:boardId/columns/:columnId/cards", verifyToken, async (req,
       "INSERT INTO cards (title, description, position, column_id) VALUES ($1, $2, $3, $4) RETURNING *",
       [title, description, position, columnId],
     );
-
+    const io = req.app.get("io"); // Get the io instance from the app
+    io.to(`board-${boardId}`).emit("cardAdded", insertResult.rows[0]);
     res.json(insertResult.rows[0]);
   } catch (error) {
     console.error("Error checking adding card permissions:", error);
