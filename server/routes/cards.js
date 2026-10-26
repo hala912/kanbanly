@@ -82,8 +82,10 @@ router.post("/boards/:boardId/columns/:columnId/cards", verifyToken, async (req,
       "INSERT INTO cards (title, description, position, column_id) VALUES ($1, $2, $3, $4) RETURNING *",
       [title, description, position, columnId],
     );
+
     const io = req.app.get("io"); // Get the io instance from the app
     io.to(`board-${boardId}`).emit("cardAdded", insertResult.rows[0]);
+
     res.json(insertResult.rows[0]);
   } catch (error) {
     console.error("Error checking adding card permissions:", error);
@@ -124,6 +126,8 @@ router.delete("/boards/:boardId/columns/:columnId/cards/:cardId", verifyToken, a
       return res.status(404).json({ error: "Card not found" });
     }
 
+    const io = req.app.get("io"); // Get the io instance from the app
+    io.to(`board-${boardId}`).emit("cardDeleted", { cardId, columnId });
     res.json({ message: "Card deleted successfully" });
   } catch (error) {
     console.error("Error deleting card:", error);

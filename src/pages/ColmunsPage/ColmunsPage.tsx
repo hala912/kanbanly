@@ -17,22 +17,35 @@ export const ColmunsPage = () => {
   const mutatedColumns = useAddColumns(boardIdNumber);
 
   const queryClient = useQueryClient()
+
   useEffect(() => {
     const socket = io("http://localhost:3000");
-    socket.on("cardAdded", () => {
-      console.log("Card added event received");
-      queryClient.invalidateQueries({queryKey :["cards", boardId]});
-    });
+
+     // Needed: columnId, because it's part of the query key
+    const onCardAdded = ({ columnId }: { columnId: string }) => {
+      queryClient.invalidateQueries({ queryKey: ["cards", boardId, columnId] });
+    };
+
+     // cardId is OPTIONAL here, only useful for the console.log
+    const onCardDeleted = ({ cardId, columnId }: { cardId: string; columnId: string }) => {
+      console.log("card deleted", cardId); // OPTIONAL: remove when you're done debugging
+      queryClient.invalidateQueries({ queryKey: ["cards", boardId, columnId] });
+    };
+
     socket.on("connect", () => {
       console.log("Connected to socket server");
     });
+    socket.on("cardAdded", onCardAdded);
+    socket.on("cardDeleted", onCardDeleted);
 
     socket.emit("joinRoom", boardId);
     return () => {
+      socket.off("cardAdded", onCardAdded);
+      socket.off("cardDeleted", onCardDeleted);
       socket.disconnect();
     }
     
-  }, [boardId]);
+  }, [boardId, queryClient]);
 
 
   //to add the board name to the page, we can use the useGetBoard hook to get the board name by id and display it in the page
@@ -65,7 +78,7 @@ export const ColmunsPage = () => {
       <div className="flex gap-4 items-start overflow-x-auto">
         {colmuns.data?.map((column) => ( 
           <DroppableColumn key={column.id} column={column}>
-             <div className="flex flex-col gap-2">
+             <div className="flex flex-col gap-2 ">
                {/** Add the CardsList component here to display the cards for each column */}
                <CardsList boardId={boardIdNumber} columnId={column.id} />
              </div>

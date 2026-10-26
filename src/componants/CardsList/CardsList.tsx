@@ -7,6 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { DragEndEvent } from "@dnd-kit/core";
 import { useState } from "react";
 import { useUpdateCardsPosition } from "../../hooks/useColumns/useUpdatecardsPostion";
+import { useDeleteCard } from "../../hooks/useCards/useDeleteCard";
 
 export const CardsList = ({
   boardId,
@@ -18,6 +19,8 @@ export const CardsList = ({
   const queryClient = useQueryClient();
   const cards = useGetCards(boardId, columnId);
   const mutatedCards = useAddCard(boardId, columnId);
+  const deletedCard = useDeleteCard(boardId, columnId);
+
   const [newCardTitle, setNewCardTitle] = useState("");
   const [isAddingCard, setIsAddingCard] = useState(false);
 
@@ -26,6 +29,10 @@ export const CardsList = ({
   const handleAddCard = () => {
     mutatedCards.mutate(newCardTitle);
     setNewCardTitle("");
+  };
+
+  const handleDeleteCard = (cardId: number) => {
+    deletedCard.mutate(cardId);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -55,9 +62,9 @@ export const CardsList = ({
     <DndContext onDragEnd={handleDragEnd}>
       <SortableContext items={cards.data?.map((card) => card.id) || []}>
         <div className="flex flex-col gap-2">
-          <div className="flex flex-col gap-2 max-h-[400px]">
+          <div className="flex flex-col gap-2 ">
             {cards.data?.map((card) => (
-              <DraggableCard key={card.id} card={card} />
+              <DraggableCard key={card.id} card={card} onDelete={handleDeleteCard} />
             ))}
           </div>
           {!isAddingCard && (
