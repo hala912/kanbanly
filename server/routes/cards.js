@@ -85,7 +85,6 @@ router.post("/boards/:boardId/columns/:columnId/cards", verifyToken, async (req,
 
     const io = req.app.get("io"); // Get the io instance from the app
     io.to(`board-${boardId}`).emit("cardAdded", insertResult.rows[0]);
-
     res.json(insertResult.rows[0]);
   } catch (error) {
     console.error("Error checking adding card permissions:", error);
@@ -128,6 +127,7 @@ router.delete("/boards/:boardId/columns/:columnId/cards/:cardId", verifyToken, a
 
     const io = req.app.get("io"); // Get the io instance from the app
     io.to(`board-${boardId}`).emit("cardDeleted", { cardId, columnId });
+    
     res.json({ message: "Card deleted successfully" });
   } catch (error) {
     console.error("Error deleting card:", error);
@@ -169,6 +169,8 @@ router.put("/boards/:boardId/columns/:columnId/cards/:cardId", verifyToken, asyn
       return res.status(404).json({ error: "Card not found" });
     }
 
+    const io = req.app.get("io"); // Get the io instance from the app
+    io.to(`board-${boardId}`).emit("cardUpdated");
     res.json({ message: "Card updated successfully" });
   } catch (error) {
     console.error("Error updating card:", error);
@@ -210,6 +212,10 @@ router.patch("/boards/:boardId/columns/:columnId/cards", verifyToken, async (req
       );
     }
 
+    console.log("Card positions updated successfully");
+    console.log("emitting cardsReordered to", boardId)
+    const io = req.app.get("io"); // Get the io instance from the app
+    io.to(`board-${boardId}`).emit("cardPositionsUpdated");
     res.json({ message: "Card positions updated successfully" });
   } catch (error) {
     console.error("Error updating card position:", error);

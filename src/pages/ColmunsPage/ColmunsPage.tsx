@@ -18,35 +18,33 @@ export const ColmunsPage = () => {
 
   const queryClient = useQueryClient()
 
-  useEffect(() => {
-    const socket = io("http://localhost:3000");
+useEffect(() => {
+  
+  if (!boardIdNumber) return;
 
-     // Needed: columnId, because it's part of the query key
-    const onCardAdded = ({ columnId }: { columnId: string }) => {
-      queryClient.invalidateQueries({ queryKey: ["cards", boardId, columnId] });
-    };
+  const socket = io("http://localhost:3000");
 
-     // cardId is OPTIONAL here, only useful for the console.log
-    const onCardDeleted = ({ cardId, columnId }: { cardId: string; columnId: string }) => {
-      console.log("card deleted", cardId); // OPTIONAL: remove when you're done debugging
-      queryClient.invalidateQueries({ queryKey: ["cards", boardId, columnId] });
-    };
+  const refetchCards = () => {
+    queryClient.invalidateQueries({ queryKey: ["cards", boardIdNumber] });
+  };
 
-    socket.on("connect", () => {
-      console.log("Connected to socket server");
-    });
-    socket.on("cardAdded", onCardAdded);
-    socket.on("cardDeleted", onCardDeleted);
+  socket.on("connect", () => {
+    console.log("Connected to socket server");
+    socket.emit("joinRoom", boardIdNumber);
+  });
+  socket.on("cardAdded", refetchCards);
+  socket.on("cardDeleted", refetchCards);
+  socket.on("cardUpdated", refetchCards);
+  socket.on("cardPositionsUpdated", refetchCards);
 
-    socket.emit("joinRoom", boardId);
-    return () => {
-      socket.off("cardAdded", onCardAdded);
-      socket.off("cardDeleted", onCardDeleted);
-      socket.disconnect();
-    }
-    
-  }, [boardId, queryClient]);
-
+  return () => {
+    socket.off("cardAdded", refetchCards);
+    socket.off("cardDeleted", refetchCards);
+    socket.off("cardUpdated", refetchCards);
+    socket.off("cardPositionsUpdated", refetchCards);
+    socket.disconnect();
+  };
+}, [boardIdNumber, queryClient]);
 
   //to add the board name to the page, we can use the useGetBoard hook to get the board name by id and display it in the page
   const boards = useGetBoards();
