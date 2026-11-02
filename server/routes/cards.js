@@ -213,7 +213,7 @@ router.patch("/boards/:boardId/columns/:columnId/cards", verifyToken, async (req
     }
 
     console.log("Card positions updated successfully");
-    console.log("emitting cardsReordered to", boardId)
+    console.log("emitting cardsReordered to", boardId) 
     const io = req.app.get("io"); // Get the io instance from the app
     io.to(`board-${boardId}`).emit("cardPositionsUpdated");
     res.json({ message: "Card positions updated successfully" });

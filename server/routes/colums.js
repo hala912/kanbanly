@@ -58,6 +58,13 @@ router.post("/boards/:boardId/columns", verifyToken, async (req, res) => {
       "INSERT INTO columns (title, position, board_id) VALUES ($1, $2, $3) RETURNING *",
       [title, position, boardId],
     );
+
+    // Emit the new column to all connected clients in the board room
+    const io = req.app.get("io");
+    io.to(`board-${boardId}`).emit("columnAdded", insertResult.rows[0]);
+
+   
+
     res.json(insertResult.rows[0]);
   } catch (error) {
     console.error("Error inserting column:", error);
@@ -87,6 +94,8 @@ router.delete("/boards/:boardId/columns/:columnId", verifyToken, async (req, res
     if (deleteResult.rows.length === 0) {
       return res.status(404).json({ error: "Column not found" });
     }
+    const io = req.app.get("io");
+    io.to(`board-${boardId}`).emit("columnDeleted", columnId);
 
     res.json(deleteResult.rows[0]);
 

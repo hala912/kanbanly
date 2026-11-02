@@ -8,6 +8,7 @@ import { DndContext } from "@dnd-kit/core";
 import { DroppableColumn } from "../../componants/DroppableColmun/DroppableColumn";
 import { io } from "socket.io-client";
 import { useQueryClient } from "@tanstack/react-query";
+import { useDeleteColumns } from "../../hooks/useColumns/useDeleteColmuns";
 
 
 export const ColmunsPage = () => {
@@ -15,6 +16,7 @@ export const ColmunsPage = () => {
   const boardIdNumber = boardId ? Number(boardId) : undefined;
   const colmuns = useGetColumns(boardIdNumber);
   const mutatedColumns = useAddColumns(boardIdNumber);
+  const deleteColumnMutation = useDeleteColumns(boardIdNumber);
 
   const queryClient = useQueryClient()
 
@@ -28,6 +30,9 @@ useEffect(() => {
     queryClient.invalidateQueries({ queryKey: ["cards", boardIdNumber] });
   };
 
+  const refetchColumns = () => {
+    queryClient.invalidateQueries({ queryKey: ["columns", boardIdNumber] });
+  };
   socket.on("connect", () => {
     console.log("Connected to socket server");
     socket.emit("joinRoom", boardIdNumber);
@@ -37,11 +42,16 @@ useEffect(() => {
   socket.on("cardUpdated", refetchCards);
   socket.on("cardPositionsUpdated", refetchCards);
 
+  socket.on("columnAdded", refetchColumns);
+  socket.on("columnDeleted", refetchColumns);
+
   return () => {
     socket.off("cardAdded", refetchCards);
     socket.off("cardDeleted", refetchCards);
     socket.off("cardUpdated", refetchCards);
     socket.off("cardPositionsUpdated", refetchCards);
+    socket.off("columnAdded", refetchColumns);
+    socket.off("columnDeleted", refetchColumns);
     socket.disconnect();
   };
 }, [boardIdNumber, queryClient]);
@@ -59,6 +69,10 @@ useEffect(() => {
     setColumnTitle("");
   };
 
+  const handleDeleteColumn = (columnId: number) => {
+    deleteColumnMutation.mutate(columnId);
+    console.log(`Delete column with ID: ${columnId}`);
+  }
   return (
     <DndContext>
     <div
@@ -75,7 +89,7 @@ useEffect(() => {
 
       <div className="flex gap-4 items-start overflow-x-auto">
         {colmuns.data?.map((column) => ( 
-          <DroppableColumn key={column.id} column={column}>
+          <DroppableColumn key={column.id} column={column} onDelete={() => handleDeleteColumn(column.id)}>
              <div className="flex flex-col gap-2 ">
                {/** Add the CardsList component here to display the cards for each column */}
                <CardsList boardId={boardIdNumber} columnId={column.id} />

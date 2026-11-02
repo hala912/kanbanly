@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "../../Apis/api";
 
-export function useDeleteColumns(boardId: number) {
+export function useDeleteColumns(boardId: number | undefined) {
 
     const queryClient = useQueryClient();
     return useMutation({

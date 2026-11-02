@@ -24,7 +24,7 @@ io.on("connection", (socket) => {
     socket.join(`board-${boardId}`);
     console.log(`${socket.id} joined board-${boardId}`);
   }) 
-
+ 
 })
 
 app.set("io", io);
