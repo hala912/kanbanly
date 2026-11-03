@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiFetch } from "../Apis/api";
+import { apiFetch } from "../../Apis/api";
 
 export function useAddNewMember(boardId: number) {
   const queryClient = useQueryClient();

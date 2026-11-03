@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 
-import { apiFetch } from "../Apis/api"
-import type { Board } from "../types/Board";
+import { apiFetch } from "../../Apis/api"
+import type { Board } from "../../types/Board";
 
 
 export const  useGetBoards=() => {

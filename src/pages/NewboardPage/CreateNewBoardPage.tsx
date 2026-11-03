@@ -18,6 +18,6 @@ return(
     >
         <CreateNewBoard onBoardCreated={(boardId) => setBoardId(boardId)} />
         {boardid && <AddMember boardId={boardid} />}    </div>
-)
+) 
 
 }
