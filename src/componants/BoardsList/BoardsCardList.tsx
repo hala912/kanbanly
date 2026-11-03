@@ -1,29 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { useGetBoards } from "../../hooks/useGetBoards";
+import { useGetBoardMembers } from "../../hooks/useBoard_members/useGetboard_members";
+import { useGetBoards } from "../../hooks/useBoards/useGetBoards";
 
 const BoardCard = () => {
   const Boards = useGetBoards();
   const navigate = useNavigate();
+  const boardMembers = useGetBoardMembers().data || [];
 
-
-  const members = [
-    {
-      name: "John Doe",
-      avatar: "https://randomuser.me/api/portraits/men/1.jpg",
-    },
-    {
-      name: "Jane Doe",
-      avatar: "https://randomuser.me/api/portraits/women/1.jpg",
-    },
-    {
-      name: "Alice Smith",
-      avatar: "https://randomuser.me/api/portraits/women/2.jpg",
-    },
-    {
-      name: "Bob Johnson",
-      avatar: "https://randomuser.me/api/portraits/men/2.jpg",
-    },
-  ];
 
   return Boards.data?.map(
     (board: { id: number; name: string; description: string }) => (
@@ -45,7 +28,7 @@ const BoardCard = () => {
 
         <div className="flex items-start justify-between gap-2 mt-4">
           <div className="flex items-center -space-x-2">
-            {members.slice(0, 2).map((member, index) => (
+            {boardMembers.slice(0, 2).map((member, index) => (
               <img
                 key={index}
                 src={member.avatar}
@@ -53,9 +36,14 @@ const BoardCard = () => {
                 className="w-8 h-8 rounded-full border-2 border-neutral-800 "
               />
             ))}
-            {members.length > 2 && (
+            <p className="text-sm text-neutral-400 ml-2">
+              {boardMembers.length > 0
+                ? `${boardMembers[0].name}${boardMembers.length > 1 ? `, ${boardMembers[1].name}` : ""}`
+                : "No members"}
+            </p>
+            {boardMembers.length > 2 && (
               <span className="w-8 h-8 flex items-center justify-center text-xs text-neutral-400 bg-neutral-800 rounded-full px-1 py-0.5">
-                +{members.length - 2}
+                +{boardMembers.length - 2}
               </span>
             )}
           </div>

@@ -8,14 +8,15 @@ const response = await fetch(`http://localhost:3000${path}`, {
    ...options,
   headers: {
     "Content-Type": "application/json",
-    "Authorization": `Bearer ${token}`,
+    ...(token && { "Authorization": `Bearer ${token}` }),//this line adds the Authorization header only if the token exists
     ...options.headers
   }     
 });
 
 
 if (!response.ok) {
-  throw new Error(`API request failed: ${response.status}`);    
+  const body = await response.json().catch(() => null);
+  throw new Error(body?.error || `API request failed: ${response.status}`);
 }
 
 return await response.json();

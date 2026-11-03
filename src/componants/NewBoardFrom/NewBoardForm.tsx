@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useCreateNewBoard } from "../../hooks/useCreateNewBoard";
+import { useCreateNewBoard } from "../../hooks/useBoards/useCreateNewBoard";
 
 export const CreateNewBoard = ({ onBoardCreated }: { onBoardCreated: (boardId: number) => void }) => {
   const mutation = useCreateNewBoard();

@@ -77,4 +77,30 @@ router.post("/boards/:boardId/members", verifyToken, async (req, res) => {
 
 });
 
+router.get("/boards/:boardId/members", verifyToken, async (req, res) => {
+  const { boardId } = req.params;
+  try {
+    // only members can see the list
+    const check = await pool.query(
+      "SELECT 1 FROM board_members WHERE board_id = $1 AND user_id = $2",
+      [boardId, req.user.id],
+    );
+    if (check.rows.length === 0) {
+      return res.status(403).json({ error: "You are not a member of this board" });
+    }
+
+    const result = await pool.query(
+      `SELECT u.id, u.email, bm.role
+       FROM board_members bm
+       JOIN users u ON u.id = bm.user_id
+       WHERE bm.board_id = $1`,
+      [boardId],
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error fetching members" });
+  }
+});
+
 module.exports = router;

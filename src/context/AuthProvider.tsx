@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { AuthContext, type User } from "./AuthContext";
+import { apiFetch } from "../Apis/api";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(() =>
@@ -17,23 +18,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   async function login(email: string, password: string) {
-    const res = await fetch("http://localhost:3000/login", {
+  const data = await apiFetch("/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  });
+  localStorage.setItem("token", data.token);
+  setToken(data.token);
+  setUser(data.user);
+}
+
+  async function signup(email: string, password: string) {
+
+    const data = await apiFetch(`${import.meta.env.VITE_API_URL}/signup`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
 
-    if (!res.ok) {
-      const body = await res.text();
-      console.error("Login failed:", res.status, body);
-      throw new Error("Login failed");
-    }
-    const data = await res.json();
     localStorage.setItem("token", data.token);
     setToken(data.token);
     setUser(data.user);
-  }
 
+  }
   function logout() {
     localStorage.removeItem("token");
     setToken(null);
@@ -41,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ token, user, login, logout }}>
+    <AuthContext.Provider value={{ token, user, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAddNewMember } from "../../hooks/useAddnewmember";
+import { useAddNewMember } from "../../hooks/useBoard_members/useAddnewmember";
 
 export const AddMember = ({boardId}: {boardId: number}) => {
 
@@ -38,32 +38,6 @@ export const AddMember = ({boardId}: {boardId: number}) => {
           >
             + Add
           </button>
-          <div className="flex flex-wrap gap-2">
-            <span className="flex items-center gap-1 bg-neutral-800 text-neutral-100 text-sm px-2 py-1 rounded-full">
-              <span className="w-5 h-5 flex items-center justify-center rounded-full bg-blue-500 text-[10px]">
-                AK
-              </span>
-              alex.k@sprintflow.io
-              <button
-                type="button"
-                className="text-neutral-400 hover:text-neutral-200"
-              >
-                ×
-              </button>
-            </span>
-            <span className="flex items-center gap-1 bg-neutral-800 text-neutral-100 text-sm px-2 py-1 rounded-full">
-              <span className="w-5 h-5 flex items-center justify-center rounded-full bg-pink-500 text-[10px]">
-                ML
-              </span>
-              maya.lin@sprintflow.io
-              <button
-                type="button"
-                className="text-neutral-400 hover:text-neutral-200"
-              >
-                ×
-              </button>
-            </span>
-          </div>
         </div>
       </div>
     </div>

@@ -6,26 +6,16 @@ const pool = require("./db");
 const app = express();
 const http = require("http");
 const { Server } = require("socket.io");
+const { setupSocket } = require("./socket");
 
-const server = http.createServer(app); 
+const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:5173",
   },
 });
-io.on("connection", (socket) => {
-  console.log("a user connected");
-  // Listen for the "disconnect" event and log when a user disconnects.
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
-  });
-  // Listen for the "joinRoom" event and join the specified room. 
-  socket.on("joinRoom", (boardId) => {
-    socket.join(`board-${boardId}`);
-    console.log(`${socket.id} joined board-${boardId}`);
-  }) 
- 
-})
+
+setupSocket(io);
 
 app.set("io", io);
 
