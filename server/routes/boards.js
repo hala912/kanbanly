@@ -63,22 +63,35 @@ router.post("/boards/:boardId/members", verifyToken, async (req, res) => {
     }
     const member_id = result.rows[0].id;
 
+    if (member_id === userId) {
+      return res.status(400).send("You cannot add yourself as a member");
+    }
+    //check if already a member
+    const check = await pool.query(
+      "SELECT 1 FROM board_members WHERE board_id = $1 AND user_id = $2",
+      [boardId, member_id],
+    );
+    if (check.rows.length > 0) {
+      return res.status(400).json({ error: "User is already a member of this board" });
+    }
     await pool.query(
       "INSERT INTO board_members (board_id, user_id, role) VALUES ($1, $2, $3)",
       [boardId, member_id, "member"],
     );
   }
-    res.send("Member added to board");
+  
+    res.json({ message: "Member added to board" });
     
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error adding member to board");
+    res.status(500).json({ error: "Error adding member to board" });
   }
 
 });
 
 router.get("/boards/:boardId/members", verifyToken, async (req, res) => {
   const { boardId } = req.params;
+
   try {
     // only members can see the list
     const check = await pool.query(
@@ -96,7 +109,9 @@ router.get("/boards/:boardId/members", verifyToken, async (req, res) => {
        WHERE bm.board_id = $1`,
       [boardId],
     );
+    
     res.json(result.rows);
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Error fetching members" });

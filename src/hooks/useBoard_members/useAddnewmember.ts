@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "../../Apis/api";
 
-export function useAddNewMember(boardId: number) {
+export function useAddNewMember(boardId: number | undefined) {
   const queryClient = useQueryClient();
 
   return useMutation(
@@ -15,7 +15,9 @@ export function useAddNewMember(boardId: number) {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["members"] });
-        }
+        },
+    
+        
     }
   )
 

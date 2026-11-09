@@ -29,7 +29,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function signup(email: string, password: string) {
 
-    const data = await apiFetch(`${import.meta.env.VITE_API_URL}/signup`, {
+    const data = await apiFetch(`/signup`, {
       method: "POST",
       body: JSON.stringify({ email, password }),
     });

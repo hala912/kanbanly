@@ -7,6 +7,7 @@ import { DroppableColumn } from "../../componants/DroppableColmun/DroppableColum
 import { useDeleteColumns } from "../../hooks/useColumns/useDeleteColmuns";
 import { useSocket } from "../../hooks/useSocket";
 import { AddColumnForm } from "../../componants/AddcolmunForm/AddColmunForm";
+import { useState } from "react";
 import { AddMember } from "../../componants/AddMember/Addmember";
 
 export const EachBoardPage = () => {
@@ -14,7 +15,7 @@ export const EachBoardPage = () => {
   const boardIdNumber = boardId ? Number(boardId) : undefined;
   const colmuns = useGetColumns(boardIdNumber);
   const deleteColumnMutation = useDeleteColumns(boardIdNumber);
-
+ 
   useSocket(boardIdNumber); // Use the custom hook to establish a socket connection
 
   //to add the board name to the page, we can use the useGetBoard hook to get the board name by id and display it in the page
@@ -26,6 +27,8 @@ export const EachBoardPage = () => {
     console.log(`Delete column with ID: ${columnId}`);
   };
 
+
+  const [isaddmemeberopen , setIsaddmemeberopen] = useState(false);
   
   return (
     <DndContext>
@@ -44,11 +47,15 @@ export const EachBoardPage = () => {
           <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-300"
           onClick={ ()=> {
             // Handle add member action
+            setIsaddmemeberopen(true);
           }}
           >
             Add Member
           </button>
         </div>
+        {isaddmemeberopen && (
+          <AddMember boardId={boardIdNumber} onClose={() => setIsaddmemeberopen(false)} />
+        )}
 
         <div className="flex gap-4 items-start overflow-x-auto">
           {colmuns.data?.map((column) => (

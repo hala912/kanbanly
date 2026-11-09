@@ -15,7 +15,7 @@ const io = new Server(server, {
   },
 });
 
-setupSocket(io);
+//setupSocket(io);
 
 app.set("io", io);
 

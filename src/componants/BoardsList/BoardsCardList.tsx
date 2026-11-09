@@ -1,11 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { useGetBoardMembers } from "../../hooks/useBoard_members/useGetboard_members";
 import { useGetBoards } from "../../hooks/useBoards/useGetBoards";
 
 const BoardCard = () => {
   const Boards = useGetBoards();
   const navigate = useNavigate();
-  const boardMembers = useGetBoardMembers().data || [];
+  //const boardMembers = useGetBoardMembers().data || [];
 
 
   return Boards.data?.map(
@@ -26,7 +25,7 @@ const BoardCard = () => {
 
         <div className="border-t border-neutral-800 my-3" />
 
-        <div className="flex items-start justify-between gap-2 mt-4">
+       { /* <div className="flex items-start justify-between gap-2 mt-4">
           <div className="flex items-center -space-x-2">
             {boardMembers.slice(0, 2).map((member, index) => (
               <img
@@ -49,7 +48,9 @@ const BoardCard = () => {
           </div>
 
           <span className="text-sm text-neutral-400">last updated 2h ago </span>
+       
         </div>
+        */}
       </div>
     ),
   );
