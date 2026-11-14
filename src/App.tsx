@@ -1,6 +1,6 @@
 
 import './App.css'
-import Sidebar from './componants/sidebar/sidebar'
+import Sidebar from './componants/Sidebar/sidebar'
 import { AppRoutes } from './Route/route'
 
 function App() {

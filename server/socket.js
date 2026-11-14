@@ -20,7 +20,7 @@ function setupSocket(io) {
       }
       boardlist[roomName].set(socket.id, { socketId: socket.id, username: username });
 
-      console.log(`User ${username} joined room ${roomName}`);
+     console.log(`User ${username} joined room ${roomName}`);
       io.to(roomName).emit("listupdate", getBoardList(roomName));
     });
 
