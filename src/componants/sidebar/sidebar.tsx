@@ -4,7 +4,7 @@ const Sidebar = () => {
   const icons = [
     { name: "Boards", icon: LayoutDashboard, path: "/boards" },
     { name: "Templates", icon: Settings, path: "/templates" },
-    { name: "Profile", icon: User, path: "/team" },
+    { name: "Profile", icon: User, path: "/profile" },
   ];
 
  
@@ -24,9 +24,13 @@ const Sidebar = () => {
             className={({ isActive }) =>
               `flex items-center gap-2 py-2 px-4 rounded ${isActive ? "bg-blue-500 text-white" : "text-neutral-300 hover:bg-[#313030] hover:text-white"}`
             }
+            onClick={
+              () => navigate(icon.path)
+            }
           >
             <icon.icon size={18} />
             <span className="text-sm">{icon.name}</span>
+          
           </NavLink>
         ))}
       </div>

@@ -1,18 +1,20 @@
 import { useState } from "react";
 import { useCreateNewBoard } from "../../hooks/useBoards/useCreateNewBoard";
+import { useNavigate } from "react-router-dom";
 
-export const CreateNewBoard = ({ onBoardCreated }: { onBoardCreated: (boardId: number) => void }) => {
+export const CreateNewBoard = () => {
   const mutation = useCreateNewBoard();
 
+  const navigate = useNavigate();
   const [boardName, setBoardName] = useState("");
   const handleCreateNewBoard = () => {
     mutation.mutate(boardName, {
-      onSuccess: (data) => {
-        onBoardCreated(data.id);
-      }
+      onSuccess: () => {
+        setBoardName("");
+        navigate("/boards"); // Navigate to the boards page after successful creation
+      },
     });
   };
-
 
   return (
     <div className="flex flex-col gap-4 p-4 rounded-lg shadow-md">
@@ -43,8 +45,6 @@ export const CreateNewBoard = ({ onBoardCreated }: { onBoardCreated: (boardId: n
               className="p-2 border border-neutral-600 rounded text-neutral-100 bg-[#0A0A0A] placeholder-neutral-500"
             />
           </div>
-
-        
 
           <div className="flex items-center justify-end gap-2 mt-2">
             <button

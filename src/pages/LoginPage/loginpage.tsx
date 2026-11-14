@@ -10,9 +10,14 @@ export function LoginTest() {
   const navigate = useNavigate();
   const user = useAuth();
   const handleLogin = () => {
+    if (!email || !password) {
+      setError("Please enter both email and password");
+      return;
+    }
     user.login(email, password).catch((err) => {
       setError(err.message);
-    }); 
+    });
+  
      navigate("/boards");
   };
 

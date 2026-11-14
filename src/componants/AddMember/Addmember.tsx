@@ -1,15 +1,28 @@
 import { useState } from "react";
 import { useAddNewMember } from "../../hooks/useBoard_members/useAddnewmember";
+import { useGetBoardMembers } from "../../hooks/useBoard_members/useGetboard_members";
+import type { OnlineUser } from "../../types/onlineUser";
 
-export const AddMember = ({boardId}: {boardId: number}) => {
-
-
+export const AddMember = ({
+  boardId,
+  onlineMembers,
+  onClose,
+}: {
+  boardId: number | undefined;
+  onlineMembers: OnlineUser[];
+  onClose: () => void;
+}) => {
+  const members = useGetBoardMembers(boardId);
   const [memberEmail, setMemberEmail] = useState("");
   const membermutation = useAddNewMember(boardId);
 
   const handleAddMember = () => {
-    membermutation.mutate(memberEmail);
-    setMemberEmail("");
+    membermutation.mutate(memberEmail, {
+      onSuccess: () => {
+        setMemberEmail("");
+        onClose();
+      },
+    });
   };
   return (
     <div className="flex flex-col gap-4 p-4 rounded-lg shadow-md">
@@ -38,6 +51,49 @@ export const AddMember = ({boardId}: {boardId: number}) => {
           >
             + Add
           </button>
+          <button
+            type="button"
+            className="bg-neutral-700 text-neutral-100 px-3 py-2 rounded hover:bg-neutral-600 transition-colors duration-300"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
+
+          {membermutation.isError && (
+            <p className="text-red-500 text-sm mt-2">
+              Error adding member:{" "}
+              {membermutation.error instanceof Error
+                ? membermutation.error.message
+                : "Unknown error"}
+            </p>
+          )}
+          {membermutation.isSuccess && (
+            <p className="text-green-500 text-sm mt-2">
+              Member added successfully!
+            </p>
+          )}
+        </div>
+        <div className="flex flex-col gap-2 mt-4">
+          {members.data?.map((member) => (
+            <div key={member.id} className="flex items-center gap-2">
+              <img
+                src={member.avatar}
+                alt={member.name}
+                className="w-8 h-8 rounded-full border-2 border-neutral-800"
+              />
+              <div className="flex flex-row justify-end gap-2">
+                <span
+                  className={`w-2.5 h-2.5 rounded-full inline-block ${
+                    onlineMembers.some((o) => o.username === member.email)
+                      ? "bg-green-500"
+                      : "bg-gray-300"
+                  }`}
+                />
+                <span className="text-sm text-neutral-400">{member.email}</span>
+                <span className="text-sm text-neutral-400">{member.role}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

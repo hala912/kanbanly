@@ -4,6 +4,7 @@ import { LoginTest } from "../pages/LoginPage/loginpage";
 import { NewBoardPage } from "../pages/NewboardPage/CreateNewBoardPage";
 import SignUp from "../pages/SignupPage/Signuppage";
 import { EachBoardPage } from "../pages/EachBoardPage/EachBoardPage";
+import ProfilePage from "../pages/ProfilePage/ProfilePage";
 
 export const AppRoutes = () => {
     
@@ -15,6 +16,7 @@ export const AppRoutes = () => {
       <Route path="/login" element={<LoginTest />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/newboard" element={<NewBoardPage />} />
+      <Route path = "/profile" element = {<ProfilePage />} />
       <Route path="/boards/:boardId/columns" element={<EachBoardPage />} />
     </Routes>
    )
